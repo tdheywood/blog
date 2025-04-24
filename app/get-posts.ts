@@ -1,5 +1,4 @@
 import postsData from "./posts.json";
-import redis from "./redis";
 import commaNumber from "comma-number";
 
 export type Post = {
@@ -10,15 +9,10 @@ export type Post = {
   viewsFormatted: string;
 };
 
-// shape of the HSET in redis
-type Views = {
-  [key: string]: string;
-};
-
 export const getPosts = async () => {
-  const allViews: null | Views = await redis.hgetall("views");
   const posts = postsData.posts.map((post): Post => {
-    const views = Number(allViews?.[post.id] ?? 0);
+    // Set default view count to 0 since we're not using Redis
+    const views = 0;
     return {
       ...post,
       views,
